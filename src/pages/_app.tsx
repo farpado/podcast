@@ -2,12 +2,34 @@ import '../styles/global.scss';
 
 import { Header } from '../components/Header';
 import { Player } from '../components/Player';
+import { PlayerContext } from '../contexts/PlayerContext';
 
 import styles from '../styles/app.module.scss';
+import { useState } from 'react';
 
 
 function MyApp({ Component, pageProps }) {
+
+  const [ episodeList, setEpisodeList ] = useState([]);
+  const [currentEpisodeIndex, setCurrentEpisodeIndex ] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false)
+
+  function play(episode){
+    setEpisodeList([episode]);
+    setCurrentEpisodeIndex(0);
+    setIsPlaying(true);
+  }
+
+  function tooglePlay(){ // se ele tiver tocando eu pauso se tiver pausado eu toco
+    setIsPlaying(!isPlaying);
+  }
+
+  function setPlayingState(state: boolean){ // mudando play e pause pelo teclado
+    setIsPlaying(state);
+  }
+
   return (
+    <PlayerContext.Provider value={{ episodeList, currentEpisodeIndex, play, isPlaying, tooglePlay, setPlayingState }}>
     <div className={styles.wrapper}>
       <main>
         <Header />
@@ -15,6 +37,7 @@ function MyApp({ Component, pageProps }) {
       </main>
       <Player/>
     </div>
+    </PlayerContext.Provider>
   )
 }
 
